@@ -26,14 +26,29 @@ const findAuthor = async function(req,res){
 }
 
 const findBook = async function(req,res){
-    let book = await bookSchema.find({"Price":{$gte:"50", $lte:"100"}}).select({Name:1,author_id:1})
+    let book = await bookSchema.find( { Price: { $gte: 50, $lte: 100} } ).select({author_id :1, _id:0})
+    console.log(book)
+    let arr = book.map(ele=>ele.author_id)
+    // console.log(arr)
+    let authName = await authorSchema.find({author_id:arr}).select({author_name:1,_id:0})
+    res.body(authName);
+    // res.send("done")
+}
+
+const getBooksByAuthorId = async function(req,res){
+    let x = req.params.authorId
+    let book = await bookSchema.find({author_id:1}).select({Name:1})
     res.send(book)
 }
 
-
+const findAuthor2 = async function(req,res){
+    let x = await authorSchema.find({age:{$gte:50}})
+    
+}
 
 module.exports.createBookData= createBookData
 module.exports.createAuthor= createAuthor
 module.exports.getBookByChetanBhagat= getBookByChetanBhagat
 module.exports.findAuthor= findAuthor
 module.exports.findBook= findBook
+module.exports.getBooksByAuthorId= getBooksByAuthorId

@@ -13,5 +13,7 @@ router.get("/getBookByChetanBhagat", controller.getBookByChetanBhagat)
 
 router.get("/getAuthor",controller.findAuthor)
 
+router.get("/getBookByAuthorId/:authorId", controller.getBooksByAuthorId)
+
 router.get("/findBook",controller.findBook)
 module.exports = router;
