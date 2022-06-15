@@ -71,6 +71,14 @@ const updateUser = async function (req, res) {
 // Check if the token is present
 // Check if the token present is a valid token
 // Return a different error message in both these cases
+let token = req.headers["x-Auth-token"];
+if (!token) token = req.headers["x-auth-token"];
+
+//If no token is present in the request header return error
+if (!token) return res.send({ status: false, msg: "token must be present" });
+let decodedToken = jwt.verify(token, "functionup-radon");
+if (!decodedToken)
+  return res.send({ status: false, msg: "token is invalid" });
 
   let userId = req.params.userId;
   let user = await userModel.findById(userId);
@@ -84,7 +92,26 @@ const updateUser = async function (req, res) {
   res.send({ status: updatedUser, data: updatedUser });
 };
 
+
+const deleteData = async function(req,res){
+  let token = req.headers["x-Auth-token"];
+  if (!token) token = req.headers["x-auth-token"];
+
+  //If no token is present in the request header return error
+  if (!token) return res.send({ status: false, msg: "token must be present" });
+  let decodedToken = jwt.verify(token, "functionup-radon");
+  if (!decodedToken)
+    return res.send({ status: false, msg: "token is invalid" });
+    
+  let userId = req.params.userId;
+let user = await userModel.update({_id: userId },{$set:{isDeleted:true}},{new:1})
+console.log(user)
+res.send("done")
+ 
+}
+
 module.exports.createUser = createUser;
 module.exports.getUserData = getUserData;
 module.exports.updateUser = updateUser;
 module.exports.loginUser = loginUser;
+module.exports.deleteData = deleteData;
